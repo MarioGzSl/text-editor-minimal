@@ -75,8 +75,15 @@ const Sidebar = () => {
     }
   }, [renamingFile]);
 
-  const handleImportClick = () => {
-    fileInputRef.current.click();
+  const handleImportFiles = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        importFiles(e.target.result);
+      };
+      reader.readAsText(file);
+    }
   };
 
   return (
@@ -120,7 +127,7 @@ const Sidebar = () => {
       </div>
 
       <div className="sidebar-footer">
-        <button className="import-btn" onClick={handleImportClick}>
+        <button className="import-btn" onClick={() => fileInputRef.current.click()}>
           <i className="fas fa-file-import"></i>
           <span>Import</span>
         </button>
@@ -133,7 +140,7 @@ const Sidebar = () => {
       <input
         type="file"
         ref={fileInputRef}
-        onChange={importFiles}
+        onChange={handleImportFiles}
         accept=".json"
         style={{ display: 'none' }}
       />

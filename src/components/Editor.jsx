@@ -1,14 +1,89 @@
 import React, { useState, useEffect } from 'react';
 import { useFiles } from '../context/FileContext';
-import Editor from '@monaco-editor/react';
+import Editor, { loader } from '@monaco-editor/react';
 import ReactMarkdown from 'react-markdown';
 import './Editor.css';
+
+// Definir los temas disponibles
+const EDITOR_THEMES = {
+  'vs': 'Light',
+  'vs-dark': 'Dark',
+  'hc-black': 'High Contrast Dark',
+  'hc-light': 'High Contrast Light',
+  'dracula': 'Dracula'
+};
+
+// Configurar Monaco Editor para cargar los lenguajes necesarios
+loader.init().then((monaco) => {
+  // Registrar los lenguajes que pueden aparecer en bloques de código de Markdown
+  Promise.all([
+    import('monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution'),
+    import('monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution'),
+    import('monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution'),
+    import('monaco-editor/esm/vs/basic-languages/css/css.contribution'),
+    import('monaco-editor/esm/vs/basic-languages/html/html.contribution'),
+    import('monaco-editor/esm/vs/basic-languages/python/python.contribution'),
+  ]).then(() => {
+    // Configurar el tema Dracula
+    monaco.editor.defineTheme('dracula', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [
+        // Headers
+        { token: 'heading.1.markdown', foreground: '#FF79C6', fontStyle: 'bold' },
+        { token: 'heading.2.markdown', foreground: '#BD93F9', fontStyle: 'bold' },
+        { token: 'heading.3.markdown', foreground: '#50FA7B', fontStyle: 'bold' },
+        { token: 'heading.4.markdown', foreground: '#FFB86C', fontStyle: 'bold' },
+        { token: 'heading.5.markdown', foreground: '#8BE9FD', fontStyle: 'bold' },
+        { token: 'heading.6.markdown', foreground: '#FF5555', fontStyle: 'bold' },
+        
+        // Emphasis
+        { token: 'emphasis', fontStyle: 'italic', foreground: '#F1FA8C' },
+        { token: 'strong', fontStyle: 'bold', foreground: '#FFB86C' },
+        
+        // Lists and quotes
+        { token: 'list.markdown', foreground: '#8BE9FD' },
+        { token: 'quote.markdown', foreground: '#F1FA8C' },
+        
+        // Links and images
+        { token: 'link.markdown', foreground: '#BD93F9' },
+        { token: 'image.markdown', foreground: '#50FA7B' },
+        
+        // Code blocks
+        { token: 'fenced_code.block.language', foreground: '#FF79C6' },
+        { token: 'fenced_code.block.language.markdown', foreground: '#FF79C6' },
+        
+        // Inline elements
+        { token: 'inline.code.markdown', foreground: '#50FA7B' },
+        { token: 'punctuation.markdown', foreground: '#6272A4' }
+      ],
+      colors: {
+        'editor.background': '#282A36',
+        'editor.foreground': '#F8F8F2',
+        'editor.lineHighlightBackground': '#44475A',
+        'editor.selectionBackground': '#44475A',
+        'editor.selectionHighlightBackground': '#424450',
+        'editorCursor.foreground': '#F8F8F2',
+        'editorWhitespace.foreground': '#3B3B3B',
+        'editorLineNumber.foreground': '#6272A4',
+        'editorLineNumber.activeForeground': '#F8F8F2',
+        'editor.findMatchBackground': '#FFB86C55',
+        'editor.findMatchHighlightBackground': '#FFB86C33',
+        'minimap.background': '#282A36',
+        'scrollbarSlider.background': '#44475A80',
+        'scrollbarSlider.hoverBackground': '#44475ACC',
+        'scrollbarSlider.activeBackground': '#44475AEE',
+      }
+    });
+  });
+});
 
 const EditorComponent = () => {
   const { files, activeFile, updateFileContent, saveFile, setActiveFile, closeFile } = useFiles();
   const [content, setContent] = useState('');
   const [isEditorReady, setIsEditorReady] = useState(false);
   const [viewMode, setViewMode] = useState('code'); // 'code', 'preview', 'split'
+  const [currentTheme, setCurrentTheme] = useState('vs-dark');
 
   useEffect(() => {
     const activeFileData = files.find(file => file.id === activeFile);
@@ -19,8 +94,21 @@ const EditorComponent = () => {
     }
   }, [activeFile, files]);
 
-  const handleEditorDidMount = () => {
+  const handleEditorDidMount = (editor, monaco) => {
     setIsEditorReady(true);
+    // Configurar el editor para Markdown
+    if (monaco) {
+      editor.updateOptions({
+        wordWrap: 'on',
+        lineNumbers: 'on',
+        renderWhitespace: 'selection',
+        tabSize: 2,
+        minimap: {
+          enabled: true,
+          maxColumn: 80,
+        },
+      });
+    }
   };
 
   const handleEditorChange = (value) => {
@@ -112,12 +200,26 @@ const EditorComponent = () => {
     );
   };
 
+  const renderThemeSelector = () => (
+    <select
+      className="theme-selector"
+      value={currentTheme}
+      onChange={(e) => setCurrentTheme(e.target.value)}
+    >
+      {Object.entries(EDITOR_THEMES).map(([value, label]) => (
+        <option key={value} value={value}>
+          {label}
+        </option>
+      ))}
+    </select>
+  );
+
   const renderEditor = () => (
     <Editor
       height="100%"
-      defaultLanguage="plaintext"
-      language={getLanguage(activeFileData.name)}
-      theme="vs-dark"
+      defaultLanguage="markdown"
+      language="markdown"
+      theme={currentTheme}
       value={content}
       onChange={handleEditorChange}
       onMount={handleEditorDidMount}
@@ -132,7 +234,18 @@ const EditorComponent = () => {
         automaticLayout: true,
         tabSize: 2,
         formatOnPaste: true,
-        formatOnType: true
+        formatOnType: true,
+        suggest: {
+          snippetsPreventQuickSuggestions: false,
+        },
+        quickSuggestions: {
+          other: true,
+          comments: true,
+          strings: true
+        },
+        bracketPairColorization: {
+          enabled: true
+        }
       }}
       loading={<div className="editor-loading">Loading...</div>}
     />
@@ -188,6 +301,7 @@ const EditorComponent = () => {
         </div>
         <div className="editor-actions">
           {renderViewModeButtons()}
+          {renderThemeSelector()}
           <button className="save-btn" onClick={() => saveFile(activeFile)}>
             <i className="fas fa-save"></i>
             <span>Save</span>

@@ -1,12 +1,58 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+
+const STORAGE_KEY = 'text-editor-files';
+const ACTIVE_FILE_KEY = 'text-editor-active-file';
 
 const FileContext = createContext();
 
 export const FileProvider = ({ children }) => {
-  const [allFiles, setAllFiles] = useState([]);
-  const [activeFile, setActiveFile] = useState(null);
+  // Inicializar el estado con los datos del localStorage si existen
+  const [allFiles, setAllFiles] = useState(() => {
+    const savedFiles = localStorage.getItem(STORAGE_KEY);
+    if (savedFiles) {
+      return JSON.parse(savedFiles);
+    }
+    // Si no hay archivos guardados, crear uno nuevo
+    const initialFile = {
+      id: Date.now().toString() + '-' + Math.random().toString(36).substring(2, 15),
+      name: 'untitled.md',
+      content: '',
+      isSaved: false,
+      isOpen: true
+    };
+    return [initialFile];
+  });
+
+  const [activeFile, setActiveFile] = useState(() => {
+    const savedActiveFile = localStorage.getItem(ACTIVE_FILE_KEY);
+    if (savedActiveFile) {
+      return savedActiveFile;
+    }
+    // Si no hay archivo activo guardado, usar el ID del archivo inicial
+    return allFiles[0]?.id || null;
+  });
+
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [renamingFile, setRenamingFile] = useState(null);
+
+  // Función para alternar el estado del sidebar
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(prev => !prev);
+  };
+
+  // Guardar archivos en localStorage cuando cambien
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(allFiles));
+  }, [allFiles]);
+
+  // Guardar archivo activo en localStorage cuando cambie
+  useEffect(() => {
+    if (activeFile) {
+      localStorage.setItem(ACTIVE_FILE_KEY, activeFile);
+    } else {
+      localStorage.removeItem(ACTIVE_FILE_KEY);
+    }
+  }, [activeFile]);
 
   // Get only open files for the editor
   const files = allFiles.filter(file => file.isOpen);
@@ -29,10 +75,14 @@ export const FileProvider = ({ children }) => {
     return newName;
   };
 
+  const generateUniqueId = () => {
+    return Date.now().toString() + '-' + Math.random().toString(36).substring(2, 15);
+  };
+
   const createNewFile = () => {
     const newFileName = getUniqueFileName('untitled.md');
     const newFile = {
-      id: Date.now().toString(),
+      id: generateUniqueId(),
       name: newFileName,
       content: '',
       isSaved: false,
@@ -137,13 +187,40 @@ export const FileProvider = ({ children }) => {
     URL.revokeObjectURL(url);
   };
 
-  const importFiles = (importedFiles) => {
-    const newFiles = importedFiles.map(file => ({
-      ...file,
-      isSaved: true,
-      isOpen: false
-    }));
-    setAllFiles(prev => [...prev, ...newFiles]);
+  const importFiles = (fileContent) => {
+    try {
+      const importedFiles = JSON.parse(fileContent);
+      if (!Array.isArray(importedFiles)) {
+        throw new Error('Invalid file format');
+      }
+
+      const newFiles = importedFiles.map(file => {
+        if (!file.name || typeof file.content !== 'string') {
+          throw new Error('Invalid file data');
+        }
+        // Asegurarnos de que el nombre del archivo sea único
+        const uniqueName = getUniqueFileName(file.name);
+        return {
+          id: generateUniqueId(),
+          name: uniqueName,
+          content: file.content,
+          isSaved: true,
+          isOpen: true
+        };
+      });
+
+      setAllFiles(prev => {
+        const updatedFiles = [...prev, ...newFiles];
+        // Si hay archivos nuevos, activamos el primero
+        if (newFiles.length > 0) {
+          setTimeout(() => setActiveFile(newFiles[0].id), 0);
+        }
+        return updatedFiles;
+      });
+    } catch (error) {
+      console.error('Error importing files:', error);
+      alert('Error importing files. Please make sure the file is in the correct format.');
+    }
   };
 
   return (
@@ -155,6 +232,7 @@ export const FileProvider = ({ children }) => {
       renamingFile,
       setActiveFile,
       setIsSidebarCollapsed,
+      toggleSidebar,
       createNewFile,
       updateFileContent,
       saveFile,
