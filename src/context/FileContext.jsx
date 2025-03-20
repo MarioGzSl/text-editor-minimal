@@ -168,6 +168,21 @@ export const FileProvider = ({ children }) => {
     }
   };
 
+  const deleteFile = (fileId) => {
+    setAllFiles(prevFiles => {
+      const remainingFiles = prevFiles.filter(file => file.id !== fileId);
+      if (activeFile === fileId) {
+        const nextOpenFile = remainingFiles.find(f => f.isOpen);
+        if (nextOpenFile) {
+          setActiveFile(nextOpenFile.id);
+        } else {
+          setActiveFile(null);
+        }
+      }
+      return remainingFiles;
+    });
+  };
+
   const value = {
     files,
     allFiles,
@@ -184,7 +199,8 @@ export const FileProvider = ({ children }) => {
     exportFiles,
     importFiles,
     closeFile,
-    openFile
+    openFile,
+    deleteFile
   };
 
   return (

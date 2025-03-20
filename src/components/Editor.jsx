@@ -48,7 +48,7 @@ const Editor = () => {
         <div className="welcome-content">
           <div className="welcome-icon">✧</div>
           <h1>text editor minimal</h1>
-          <p>comienza a escribir</p>
+          <p>start writing</p>
         </div>
       </div>
     );

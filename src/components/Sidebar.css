@@ -179,8 +179,12 @@
   background-color: #2d2d2d;
   border: 1px solid #3d3d3d;
   border-radius: 4px;
-  padding: 0.5rem 0;
+  padding: 0.5rem;
   z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 150px;
 }
 
 .context-menu button {
@@ -188,21 +192,33 @@
   align-items: center;
   gap: 0.5rem;
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
   background: none;
   border: none;
-  color: #fff;
+  color: #d4d4d4;
   cursor: pointer;
-  text-align: left;
+  border-radius: 3px;
+  transition: all 0.2s;
+  font-size: 0.9rem;
 }
 
 .context-menu button:hover {
   background-color: #3d3d3d;
+  color: #fff;
 }
 
-.context-menu i {
-  font-size: 0.9rem;
-  color: #858585;
+.context-menu button i {
+  width: 16px;
+  text-align: center;
+}
+
+.context-menu button:last-child {
+  color: #ff6b6b;
+}
+
+.context-menu button:last-child:hover {
+  background-color: #4d2d2d;
+  color: #ff8787;
 }
 
 .sidebar-footer {

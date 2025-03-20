@@ -15,7 +15,8 @@ const Sidebar = () => {
     setRenamingFile,
     exportFiles,
     importFiles,
-    openFile
+    openFile,
+    deleteFile
   } = useFiles();
 
   const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, fileId: null });
@@ -150,6 +151,14 @@ const Sidebar = () => {
             setContextMenu({ visible: false, x: 0, y: 0, fileId: null });
           }}>
             <i className="fas fa-edit"></i> Rename
+          </button>
+          <button onClick={() => {
+            if (contextMenu.fileId) {
+              deleteFile(contextMenu.fileId);
+            }
+            setContextMenu({ visible: false, x: 0, y: 0, fileId: null });
+          }}>
+            <i className="fas fa-trash-alt"></i> Delete
           </button>
         </div>
       )}
