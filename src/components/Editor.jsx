@@ -161,7 +161,7 @@ const EditorComponent = () => {
           <div className="welcome-content">
             <div className="welcome-icon">✧</div>
             <h1>text editor minimal</h1>
-            <p>start writing</p>
+            <p>create or import files to start</p>
           </div>
         </div>
       </div>

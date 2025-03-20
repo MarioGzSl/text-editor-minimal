@@ -273,23 +273,68 @@
 .welcome-content {
   text-align: center;
   z-index: 1;
+  animation: fadeIn 0.8s ease-out;
 }
 
 .welcome-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
-  color: #666;
+  font-size: 64px;
+  margin-bottom: 24px;
+  color: #569cd6;
+  animation: pulse 2s infinite;
+  display: inline-block;
 }
 
 .welcome-content h1 {
-  font-size: 24px;
-  margin-bottom: 8px;
-  font-weight: normal;
+  font-size: 28px;
+  margin-bottom: 16px;
+  font-weight: 300;
+  color: #d4d4d4;
+  letter-spacing: 1px;
 }
 
 .welcome-content p {
   font-size: 16px;
-  color: #666;
+  color: #888;
+  opacity: 0;
+  animation: slideUp 0.8s ease-out forwards;
+  animation-delay: 0.4s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .editor-container {
@@ -445,4 +490,21 @@
 
 .theme-dracula .markdown-preview hr {
   background-color: #44475A;
+}
+
+/* Estilos específicos para el tema dracula */
+.theme-dracula .welcome-screen {
+  background-color: #282A36;
+}
+
+.theme-dracula .welcome-icon {
+  color: #BD93F9;
+}
+
+.theme-dracula .welcome-content h1 {
+  color: #F8F8F2;
+}
+
+.theme-dracula .welcome-content p {
+  color: #6272A4;
 } 

@@ -11,27 +11,40 @@ export const FileProvider = ({ children }) => {
   // Inicializar el estado con los datos del localStorage si existen
   const [allFiles, setAllFiles] = useState(() => {
     const savedFiles = localStorage.getItem(STORAGE_KEY);
+    const savedActiveFile = localStorage.getItem(ACTIVE_FILE_KEY);
+    
     if (savedFiles) {
-      return JSON.parse(savedFiles);
+      const files = JSON.parse(savedFiles);
+      // Si hay un archivo activo guardado, abrirlo
+      if (savedActiveFile) {
+        return files.map(file => ({
+          ...file,
+          isOpen: file.id === savedActiveFile
+        }));
+      }
+      // Si no hay archivo activo, todos cerrados
+      return files.map(file => ({ ...file, isOpen: false }));
     }
-    // Si no hay archivos guardados, crear uno nuevo
+    
+    // Si no hay archivos guardados, crear uno nuevo pero cerrado
     const initialFile = {
       id: Date.now().toString() + '-' + Math.random().toString(36).substring(2, 15),
       name: 'untitled.md',
       content: '',
       isSaved: false,
-      isOpen: true
+      isOpen: false
     };
     return [initialFile];
   });
 
   const [activeFile, setActiveFile] = useState(() => {
     const savedActiveFile = localStorage.getItem(ACTIVE_FILE_KEY);
-    if (savedActiveFile) {
+    // Si hay un archivo activo guardado y existe en allFiles, usarlo
+    if (savedActiveFile && allFiles.some(file => file.id === savedActiveFile)) {
       return savedActiveFile;
     }
-    // Si no hay archivo activo guardado, usar el ID del archivo inicial
-    return allFiles[0]?.id || null;
+    // Si no hay archivo activo válido, mostrar pantalla de bienvenida
+    return null;
   });
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -120,9 +133,10 @@ export const FileProvider = ({ children }) => {
   };
 
   const closeFile = (fileId) => {
-    // Si es el último archivo abierto, no permitir cerrarlo
-    const openFiles = allFiles.filter(f => f.isOpen);
-    if (openFiles.length === 1 && openFiles[0].id === fileId) {
+    // Si fileId es null, cerrar todos los archivos
+    if (fileId === null) {
+      setAllFiles(prev => prev.map(file => ({ ...file, isOpen: false })));
+      setActiveFile(null);
       return;
     }
 
@@ -142,6 +156,8 @@ export const FileProvider = ({ children }) => {
       const remainingOpenFiles = allFiles.filter(f => f.id !== fileId && f.isOpen);
       if (remainingOpenFiles.length > 0) {
         setActiveFile(remainingOpenFiles[0].id);
+      } else {
+        setActiveFile(null);
       }
     }
   };

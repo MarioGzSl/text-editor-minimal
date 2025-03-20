@@ -16,7 +16,8 @@ const Sidebar = () => {
     exportFiles,
     importFiles,
     openFile,
-    deleteFile
+    deleteFile,
+    closeFile
   } = useFiles();
 
   const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, fileId: null });
