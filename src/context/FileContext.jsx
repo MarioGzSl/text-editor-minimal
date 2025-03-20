@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const STORAGE_KEY = 'text-editor-files';
 const ACTIVE_FILE_KEY = 'text-editor-active-file';
+const THEME_KEY = 'text-editor-theme';
+const DEFAULT_THEME = 'vs-dark';
 
 const FileContext = createContext();
 
@@ -35,6 +37,10 @@ export const FileProvider = ({ children }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [renamingFile, setRenamingFile] = useState(null);
 
+  const [currentTheme, setCurrentTheme] = useState(() => {
+    return localStorage.getItem(THEME_KEY) || DEFAULT_THEME;
+  });
+
   // Función para alternar el estado del sidebar
   const toggleSidebar = () => {
     setIsSidebarCollapsed(prev => !prev);
@@ -53,6 +59,11 @@ export const FileProvider = ({ children }) => {
       localStorage.removeItem(ACTIVE_FILE_KEY);
     }
   }, [activeFile]);
+
+  // Guardar el tema en localStorage cuando cambie
+  useEffect(() => {
+    localStorage.setItem(THEME_KEY, currentTheme);
+  }, [currentTheme]);
 
   // Get only open files for the editor
   const files = allFiles.filter(file => file.isOpen);
@@ -230,6 +241,8 @@ export const FileProvider = ({ children }) => {
       activeFile,
       isSidebarCollapsed,
       renamingFile,
+      currentTheme,
+      setCurrentTheme,
       setActiveFile,
       setIsSidebarCollapsed,
       toggleSidebar,

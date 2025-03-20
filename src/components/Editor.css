@@ -355,4 +355,36 @@
   background-color: #282A36;
   color: #fff;
   padding: 8px;
+}
+
+.editor-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  background-color: #1e1e1e; /* Color que coincide con vs-dark */
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid transparent;
+  border-top-color: #569cd6; /* Color azul de VS Code */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilos específicos para el tema dracula */
+.theme-dracula .editor-loading {
+  background-color: #282A36;
+}
+
+.theme-dracula .spinner {
+  border-top-color: #BD93F9; /* Color violeta de Dracula */
 } 
