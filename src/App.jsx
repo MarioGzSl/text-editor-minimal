@@ -1,15 +1,15 @@
 import React from 'react'
-import Sidebar from './components/Sidebar'
-import Editor from './components/Editor'
 import { FileProvider } from './context/FileContext'
+import Sidebar from './components/Sidebar'
+import EditorComponent from './components/Editor'
 import './App.css'
 
-function App() {
+const App = () => {
   return (
     <FileProvider>
       <div className="app">
         <Sidebar />
-        <Editor />
+        <EditorComponent />
       </div>
     </FileProvider>
   )
