@@ -4,7 +4,7 @@ import './Sidebar.css';
 
 const Sidebar = () => {
   const { 
-    files, 
+    allFiles,
     activeFile, 
     isSidebarCollapsed, 
     createNewFile, 
@@ -12,12 +12,16 @@ const Sidebar = () => {
     toggleSidebar,
     renameFile,
     renamingFile,
-    setRenamingFile
+    setRenamingFile,
+    exportFiles,
+    importFiles,
+    openFile
   } = useFiles();
 
   const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0, fileId: null });
   const [editingName, setEditingName] = useState('');
   const renameInputRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const handleContextMenu = (e, fileId) => {
     e.preventDefault();
@@ -48,6 +52,14 @@ const Sidebar = () => {
     }
   };
 
+  const handleFileClick = (fileId, isOpen) => {
+    if (!isOpen) {
+      openFile(fileId);
+    } else {
+      setActiveFile(fileId);
+    }
+  };
+
   useEffect(() => {
     document.addEventListener('click', handleClickOutside);
     return () => {
@@ -58,9 +70,13 @@ const Sidebar = () => {
   useEffect(() => {
     if (renamingFile && renameInputRef.current) {
       renameInputRef.current.focus();
-      renameInputRef.current.select(); // Selecciona todo el texto
+      renameInputRef.current.select(); // Select all text
     }
   }, [renamingFile]);
+
+  const handleImportClick = () => {
+    fileInputRef.current.click();
+  };
 
   return (
     <div className={`sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
@@ -68,23 +84,21 @@ const Sidebar = () => {
         <button className="toggle-sidebar" onClick={toggleSidebar}>
           <i className={`fas ${isSidebarCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'}`}></i>
         </button>
-        <h2>Explorador</h2>
+        <h2>Explorer</h2>
         <button className="new-file-btn" onClick={createNewFile}>
           <i className="fas fa-plus"></i>
         </button>
       </div>
       <div className="file-list">
-        {files.map(file => (
+        {allFiles.map(file => (
           <div
             key={file.id}
-            className={`file-item ${activeFile === file.id ? 'active' : ''}`}
-            onClick={() => setActiveFile(file.id)}
+            className={`file-item ${file.id === activeFile ? 'active' : ''} ${!file.isOpen ? 'closed' : ''}`}
+            onClick={() => handleFileClick(file.id, file.isOpen)}
             onDoubleClick={() => handleDoubleClick(file.id, file.name)}
             onContextMenu={(e) => handleContextMenu(e, file.id)}
           >
-            <span className="file-icon">
-              <i className="fas fa-file-alt"></i>
-            </span>
+            <i className="fas fa-file-alt file-icon"></i>
             {renamingFile === file.id ? (
               <form onSubmit={(e) => handleRenameSubmit(e, file.id)} className="rename-form">
                 <input
@@ -99,10 +113,29 @@ const Sidebar = () => {
             ) : (
               <span className="file-name">{file.name}</span>
             )}
-            {!file.isSaved && <span className="unsaved-indicator">●</span>}
+            {!file.isSaved && <span className="unsaved-indicator">•</span>}
           </div>
         ))}
       </div>
+
+      <div className="sidebar-footer">
+        <button className="import-btn" onClick={handleImportClick}>
+          <i className="fas fa-file-import"></i>
+          <span>Import</span>
+        </button>
+        <button className="export-btn" onClick={exportFiles}>
+          <i className="fas fa-file-export"></i>
+          <span>Export</span>
+        </button>
+      </div>
+
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={importFiles}
+        accept=".json"
+        style={{ display: 'none' }}
+      />
 
       {contextMenu.visible && (
         <div 
@@ -110,13 +143,13 @@ const Sidebar = () => {
           style={{ top: contextMenu.y, left: contextMenu.x }}
         >
           <button onClick={() => {
-            const file = files.find(f => f.id === contextMenu.fileId);
+            const file = allFiles.find(f => f.id === contextMenu.fileId);
             if (file) {
               handleDoubleClick(file.id, file.name);
             }
             setContextMenu({ visible: false, x: 0, y: 0, fileId: null });
           }}>
-            <i className="fas fa-edit"></i> Renombrar
+            <i className="fas fa-edit"></i> Rename
           </button>
         </div>
       )}

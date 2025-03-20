@@ -1,10 +1,10 @@
 .sidebar {
-  width: 180px;
+  width: 300px;
   height: 100vh;
-  background-color: #1e1e1e;
+  background-color: #252526;
   color: #fff;
   padding: 0.5rem;
-  border-right: 1px solid #333;
+  border-right: 1px solid #3d3d3d;
   transition: width 0.3s ease;
   display: flex;
   flex-direction: column;
@@ -13,25 +13,22 @@
 }
 
 .sidebar.collapsed {
-  width: 50px;
+  width: 70px;
   padding: 0.5rem;
 }
 
 .sidebar-header {
+  padding: 1rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  min-width: 0;
+  gap: 0.5rem;
+  border-bottom: 1px solid #3d3d3d;
 }
 
 .sidebar-header h2 {
   margin: 0;
   font-size: 1rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  flex-grow: 1;
 }
 
 .sidebar.collapsed .sidebar-header h2,
@@ -42,20 +39,23 @@
 .toggle-sidebar {
   background: none;
   border: none;
-  color: #fff;
+  color: #858585;
   cursor: pointer;
   padding: 0.5rem;
-  font-size: 0.9rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
+  border-radius: 3px;
+  transition: all 0.2s;
 }
 
 .toggle-sidebar:hover {
-  background-color: #333;
+  background-color: #2d2d2d;
+  color: #fff;
+}
+
+.toggle-sidebar:focus {
+  outline: none;
 }
 
 .new-file-btn {
@@ -64,13 +64,9 @@
   color: #fff;
   cursor: pointer;
   padding: 0.5rem;
-  font-size: 0.9rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
 }
 
 .new-file-btn:hover {
@@ -78,39 +74,59 @@
 }
 
 .file-list {
+  flex-grow: 1;
   overflow-y: auto;
-  height: calc(100vh - 4rem);
+  padding: 0.5rem 0;
+  width: 100%;
 }
 
 .file-item {
+  padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
-  padding: 0.5rem;
+  gap: 0.5rem;
   cursor: pointer;
-  border-radius: 4px;
-  margin-bottom: 0.25rem;
-  position: relative;
+  transition: background-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .file-item:hover {
-  background-color: #2a2a2a;
+  background-color: #2d2d2d;
 }
 
 .file-item.active {
-  background-color: #37373d;
+  background-color: #2d2d2d;
 }
 
-.file-icon {
-  margin-right: 0.5rem;
-  font-size: 0.9rem;
+.file-item.closed {
+  opacity: 0.7;
+}
+
+.file-item.closed:hover {
+  opacity: 1;
+}
+
+.file-item.closed .file-icon {
   color: #858585;
 }
 
+.file-item.closed .file-name {
+  color: #858585;
+}
+
+.file-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+}
+
 .file-name {
-  flex: 1;
-  white-space: nowrap;
+  flex-grow: 1;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sidebar.collapsed .file-name {
@@ -119,7 +135,7 @@
 
 .unsaved-indicator {
   color: #ffd700;
-  margin-left: 0.5rem;
+  font-size: 0.8rem;
 }
 
 .sidebar.collapsed .unsaved-indicator {
@@ -139,18 +155,18 @@
 }
 
 .rename-form {
-  flex: 1;
-  margin-right: 0.5rem;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
 }
 
 .rename-input {
-  width: 100%;
-  background: #2d2d2d;
-  border: 1px solid #3d3d3d;
+  background: none;
+  border: none;
   color: #fff;
-  padding: 0.25rem 0.5rem;
-  border-radius: 2px;
-  font-size: 0.9rem;
+  font-size: inherit;
+  padding: 0;
+  width: 100%;
   outline: none;
 }
 
@@ -160,13 +176,11 @@
 
 .context-menu {
   position: fixed;
-  background-color: #252526;
+  background-color: #2d2d2d;
   border: 1px solid #3d3d3d;
   border-radius: 4px;
-  padding: 0.25rem 0;
-  min-width: 150px;
+  padding: 0.5rem 0;
   z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .context-menu button {
@@ -179,15 +193,137 @@
   border: none;
   color: #fff;
   cursor: pointer;
-  font-size: 0.9rem;
   text-align: left;
 }
 
 .context-menu button:hover {
-  background-color: #2d2d2d;
+  background-color: #3d3d3d;
 }
 
 .context-menu i {
   font-size: 0.9rem;
   color: #858585;
+}
+
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid #3d3d3d;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.import-btn,
+.export-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: none;
+  border: 1px solid #3d3d3d;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+  flex: 1;
+}
+
+.import-btn:hover,
+.export-btn:hover {
+  background-color: #2d2d2d;
+}
+
+.import-btn i,
+.export-btn i {
+  font-size: 1.1rem;
+}
+
+.import-btn span,
+.export-btn span {
+  font-size: 0.9rem;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar-footer {
+  flex-direction: column;
+}
+
+.sidebar.collapsed .import-btn,
+.sidebar.collapsed .export-btn {
+  padding: 0.75rem;
+  justify-content: center;
+  flex: none;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+}
+
+.sidebar.collapsed .import-btn:hover,
+.sidebar.collapsed .export-btn:hover {
+  background-color: #2d2d2d;
+}
+
+.sidebar.collapsed .import-btn span,
+.sidebar.collapsed .export-btn span {
+  display: none;
+}
+
+.sidebar.collapsed .import-btn i,
+.sidebar.collapsed .export-btn i {
+  margin: 0;
+  font-size: 1.3rem;
+  width: 28px;
+  text-align: center;
+}
+
+.sidebar-title {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.sidebar.collapsed .file-item {
+  padding: 0.75rem;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sidebar.collapsed .file-icon {
+  width: 28px;
+  font-size: 1.3rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar.collapsed .file-name,
+.sidebar.collapsed .unsaved-indicator {
+  display: none;
+  width: 0;
+  overflow: hidden;
+}
+
+.sidebar.collapsed .file-item {
+  position: relative;
+}
+
+.sidebar.collapsed .file-item::after,
+.sidebar.collapsed .toggle-sidebar::after,
+.sidebar.collapsed .import-btn::after,
+.sidebar.collapsed .export-btn::after {
+  display: none;
+}
+
+.sidebar.collapsed .toggle-sidebar {
+  position: relative;
+}
+
+.sidebar.collapsed .import-btn,
+.sidebar.collapsed .export-btn {
+  position: relative;
 } 
