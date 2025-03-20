@@ -1,115 +1,84 @@
 # Minimal Text Editor
 
-A simple text editor built with React and Vite.
+A minimalist Markdown editor built with React and Vite, featuring syntax highlighting, live preview, and theme support.
 
-## Quick Start
+## Features
 
-```bash
-# Install
-npm install
+- Markdown editing with syntax highlighting
+- Live preview and split view modes
+- Multiple theme support (Dark, Light, Dracula)
+- File management (create, rename, delete)
+- Import/Export functionality
+- Automatic file persistence
 
-# Run
-npm run dev
-```
+## Getting Started
 
-## Available Commands
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run linter
-
-## Tech Stack
-
-- React 18
-- Vite
-- ESLint
-
-## 🚀 Features
-
-- Clean and minimalist user interface
-- Developed with Vite for optimal performance
-- ESLint configuration for code quality
-
-## 🛠️ Technologies Used
-
-- React 18
-- Vite
-- ESLint
-- React DOM
-
-## 📦 Prerequisites
+### Prerequisites
 
 - Node.js (version 14 or higher)
 - npm or yarn
 
-## 🔧 Installation
+### Installation
 
-1. Clone the repository:
+Clone the repository:
 ```bash
 git clone https://github.com/your-username/text-editor-minimal.git
+cd text-editor-minimal
 ```
 
-2. Install dependencies:
+Install dependencies:
 ```bash
 npm install
-# or
-yarn install
 ```
-
-## 🚀 Usage
 
 ### Development
-To start the development server:
+
+Start the development server:
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-### Build
-To create a production build:
+Other available commands:
 ```bash
-npm run build
-# or
-yarn build
+npm run build    # Create production build
+npm run preview  # Preview production build
+npm run lint     # Run linter
 ```
 
-### Preview
-To preview the production build:
-```bash
-npm run preview
-# or
-yarn preview
-```
+## Technology Stack
 
-### Linting
-To run the linter:
-```bash
-npm run lint
-# or
-yarn lint
-```
+- React 18
+- Monaco Editor
+- Vite
+- ESLint
 
-## 📝 License
+## Architecture
 
-This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0).
+The editor is built with a modular architecture:
 
-This means you are free to:
-- Share — copy and redistribute the material in any medium or format
-- Adapt — remix, transform, and build upon the material
+- `FileContext` - Manages file state and operations
+- `Editor` - Monaco editor integration with theme support
+- `Sidebar` - File management interface
+- `Preview` - Markdown rendering
 
-Under the following terms:
-- Attribution — You must give appropriate credit, provide a link to the license, and indicate if changes were made.
-- NonCommercial — You may not use the material for commercial purposes.
+## License
 
-For more information, see the full license text at:
-https://creativecommons.org/licenses/by-nc/4.0/
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-## 🤝 Contributing
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Contributions are welcome. Please open an issue first to discuss the changes you would like to make.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-## 📞 Contact
+## Contributing
 
-If you have any questions or suggestions, feel free to open an issue in the repository.
+Contributions are welcome. Please open an issue first to discuss proposed changes.
+
+## Contact
+
+For questions or suggestions, please open an issue in the repository.
