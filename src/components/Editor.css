@@ -117,6 +117,7 @@
   color: #fff;
   cursor: pointer;
   transition: background-color 0.2s;
+  margin-right: 8px;
 }
 
 .save-btn:hover {
@@ -379,17 +380,6 @@
 
 .lint-error:hover {
   background-color: #2a2a2a;
-}
-
-/* Remover estilos que fuerzan el fondo */
-.monaco-editor,
-.monaco-editor .margin,
-.split-pane .monaco-editor,
-.editor-content .monaco-editor,
-.monaco-editor .monaco-editor-background,
-.monaco-editor .margin-view-overlays,
-.monaco-editor .margin-view-overlays .line-numbers {
-  /* Remover los !important */
 }
 
 .theme-selector {
