@@ -1,0 +1,145 @@
+.editor {
+  flex: 1;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #1e1e1e;
+  color: #fff;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #252526;
+  border-bottom: 1px solid #333;
+  height: 60px;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.file-tabs {
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+  flex: 1;
+  margin-right: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: #666 #1e1e1e;
+  height: 100%;
+  align-items: center;
+  padding: 0;
+}
+
+.file-tabs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.file-tabs::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+.file-tabs::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 3px;
+}
+
+.file-tab {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #2d2d2d;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  min-width: 150px;
+  max-width: 250px;
+  position: relative;
+  height: 40px;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.file-tab.active {
+  background-color: #1e1e1e;
+}
+
+.tab-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+.unsaved-dot {
+  color: #ffd700;
+  margin-left: 0.5rem;
+}
+
+.editor-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.save-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  border-radius: 4px;
+  min-width: 45px;
+  height: 40px;
+  margin-top: 0;
+}
+
+.save-btn:hover {
+  background-color: #333;
+}
+
+.save-btn i {
+  font-size: 1.1rem;
+}
+
+.save-btn span {
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.editor-content {
+  flex: 1;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.code-editor {
+  width: 100%;
+  height: 100%;
+  background-color: #1e1e1e;
+  color: #fff;
+  border: none;
+  resize: none;
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 1rem;
+  outline: none;
+  tab-size: 2;
+}
+
+.code-editor:focus {
+  outline: none;
+} 
