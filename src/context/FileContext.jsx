@@ -181,19 +181,25 @@ export const FileProvider = ({ children }) => {
   };
 
   const deleteFile = (fileId) => {
-    // Si es el último archivo, no permitir borrarlo
-    if (allFiles.length === 1) {
-      return;
-    }
-
-    setAllFiles(prev => prev.filter(file => file.id !== fileId));
-
-    // Si el archivo borrado era el activo, activar otro
-    if (activeFile === fileId) {
-      const remainingFiles = allFiles.filter(f => f.id !== fileId);
-      if (remainingFiles.length > 0) {
-        setActiveFile(remainingFiles[0].id);
+    setAllFiles(prev => {
+      // Si es el último archivo, reemplazarlo con uno nuevo
+      if (prev.length === 1) {
+        const newFile = {
+          id: generateUniqueId(),
+          name: 'untitled.md',
+          content: '',
+          isSaved: false,
+          isOpen: false
+        };
+        return [newFile];
       }
+      // Si no es el último, simplemente eliminarlo
+      return prev.filter(file => file.id !== fileId);
+    });
+
+    // Si el archivo borrado era el activo, mostrar la pantalla de bienvenida
+    if (activeFile === fileId) {
+      setActiveFile(null);
     }
   };
 
