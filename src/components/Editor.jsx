@@ -101,6 +101,21 @@ const EditorComponent = () => {
   const [content, setContent] = useState('');
   const [isEditorReady, setIsEditorReady] = useState(false);
   const [viewMode, setViewMode] = useState('code'); // 'code', 'preview', 'split'
+  const [wordCount, setWordCount] = useState(0);
+  const [characterCount, setCharacterCount] = useState(0);
+
+  const calculateCounts = (text) => {
+    const characters = text.length;
+    const trimmedText = text.trim();
+    const words = trimmedText === '' ? 0 : trimmedText.split(/\s+/).length;
+    return { words, characters };
+  };
+
+  useEffect(() => {
+    const { words, characters } = calculateCounts(content);
+    setWordCount(words);
+    setCharacterCount(characters);
+  }, [content]);
 
   useEffect(() => {
     const activeFileData = files.find(file => file.id === activeFile);
@@ -335,6 +350,9 @@ const EditorComponent = () => {
       </div>
       <div className="editor-content">
         {renderContent()}
+      </div>
+      <div className="editor-footer">
+        <span>Words: {wordCount}</span> | <span>Characters: {characterCount}</span>
       </div>
     </div>
   );

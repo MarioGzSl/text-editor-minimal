@@ -498,3 +498,12 @@
 .theme-dracula .welcome-content p {
   color: #6272A4;
 } 
+
+.editor-footer {
+  padding: 4px 10px;
+  background-color: #252526;
+  color: #cccccc;
+  font-size: 0.8em;
+  text-align: right;
+  border-top: 1px solid #333; /* Optional: to match editor-header style */
+}
