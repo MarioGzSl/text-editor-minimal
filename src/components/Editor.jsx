@@ -351,7 +351,7 @@ const EditorComponent = () => {
       <div className="editor-content">
         {renderContent()}
       </div>
-      <div className="editor-footer">
+      <div className="editor-footer" role="status">
         <span>Words: {wordCount}</span> | <span>Characters: {characterCount}</span>
       </div>
     </div>
